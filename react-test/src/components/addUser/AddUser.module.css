@@ -1,0 +1,45 @@
+.form-container {
+    width: max-content;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 2px 2px 2px 2px gray;
+    background: lightgreen;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+input,
+select {
+  box-sizing: border-box;
+  height: 35px;
+  width: 200px;
+  border-radius: 8px;
+  border: 1px solid black;
+  padding: 0 5px;
+}
+.error-input {
+    border: 1px solid red;
+    background: lightsalmon;
+}
+button {
+  height: 30px;
+  width: 100px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: black;
+  color: white;
+  
+}
+button:hover {
+  background: white;
+  color: black; 
+  border: 1px solid black; 
+}
+span {
+    color: red;
+    font-weight: bold;
+}

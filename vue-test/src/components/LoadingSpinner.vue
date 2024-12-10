@@ -1,0 +1,23 @@
+<template>
+        <div class="spinner"></div>
+</template>
+
+<style scoped>
+
+.spinner {
+    height: 150px;
+    width: 150px;
+    border: 10px solid black;
+    border-radius: 50%;
+    border-bottom: none;
+    animation: rot 1s infinite ease-in;
+}
+@keyframes rot {
+    0% {
+        transform: rotateZ(0);
+    }
+    100% {
+        transform: rotateZ(360deg);
+    }
+}
+</style>
