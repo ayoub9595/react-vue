@@ -1,0 +1,43 @@
+.container {
+    /* height: 150px; */
+    width: 300px;
+    border: 1px solid black;
+    border-radius: 10px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    transform: translateX(100%);
+    transition: all 1s ease-in-out;
+}
+.show {
+    transform: translateX(0);
+    top: 10px;
+    right: 10px;
+}
+.danger {
+    background: red;
+    color: white;
+}
+.danger span {
+    color: white;
+}
+.success {
+    background: green;
+}
+.success span {
+    color: white;
+}
+.title {
+    height: 30px;
+    border-bottom: 1px solid black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+}
+.exit {
+    cursor: pointer
+}
+.body {
+    padding: 20px;
+}
