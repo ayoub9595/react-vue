@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  react-app:
+    build:
+      context: ./react-test
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    container_name: react-app
+
+  vue-app:
+    build:
+      context: ./vue-test
+      dockerfile: Dockerfile
+    ports:
+      - "8081:80"
+    container_name: vue-app

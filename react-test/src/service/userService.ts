@@ -1,7 +1,7 @@
 import { User } from "../User";
 import { FirebaseGetResponse } from "./FirebaseResponse";
 
-const url = 'https://db-data-81e13-default-rtdb.europe-west1.firebasedatabase.app/users.jsons'
+const url = 'https://db-data-81e13-default-rtdb.europe-west1.firebasedatabase.app/users.json'
 
 export const transformFirebaseResponse = (response: FirebaseGetResponse): User[] => {
     return Object.entries(response).map(([key, value]) => ({
