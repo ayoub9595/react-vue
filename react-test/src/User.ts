@@ -8,4 +8,7 @@ export interface User {
 
 export interface UserProptype {
     users: User[];
+    add:boolean;
+    handleAdd: () => void;
+    handleDisableAdd: () => void;
 };

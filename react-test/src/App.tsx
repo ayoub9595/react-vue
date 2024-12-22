@@ -10,6 +10,8 @@ import Toaster from "./components/toaster/Toaster";
 import { handleApiError, logError } from "./utils/ErrorHandler";
 
 const App = () => {
+  const [showAddUser,setShowAddUser] = useState(false);
+  const [add,setAdd] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState({
@@ -75,8 +77,11 @@ const App = () => {
   return (
     <div className={style.container}>
       {loading && <BackDrop />}
-      <AddUser emit={addNewUser} />
-      <UsersList users={users} />
+      {showAddUser && <AddUser emit={addNewUser} />}
+      <UsersList add={add}
+                 handleAdd={() => {setAdd(false);setShowAddUser(true)}}
+                 handleDisableAdd={() => {setAdd(true);setShowAddUser(false)}}
+                 users={users} />
       <Toaster
         show={modal.show}
         class={modal.class}

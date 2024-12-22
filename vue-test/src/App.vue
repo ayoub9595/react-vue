@@ -15,6 +15,19 @@ import { handleApiError, logError } from './utils/ErrorHandler'
 
 const users = reactive<User[]>([])
 const loading = ref(false)
+const add = ref(true);
+const showAdd = ref(false)
+
+const handleAdd = () => {
+  add.value = false
+  showAdd.value = true
+}
+
+const handleDisableAdd = () => {
+  add.value = true
+  showAdd.value = false
+
+}
 
 const modal = reactive({
   show: false,
@@ -32,7 +45,6 @@ const updateModal = (newModalState: typeof modal) => {
   if (modal.show) {
     setTimeout(() => {
       modal.show = false
-      console.log('Modal auto-hidden after timeout')
     }, 5000)
   }
 }
@@ -80,8 +92,11 @@ const addNewUser = async (user: User) => {
 <template>
   <div class="container">
     <BackDrop v-if="loading" />
-    <AddUserForm @add-user="addNewUser" />
-    <UsersList :users="users" />
+    <AddUserForm v-if="showAdd" @add-user="addNewUser" />
+    <UsersList  :add="add"
+                :users="users"
+                @handle-add="handleAdd" 
+                @handle-disable-add="handleDisableAdd" />
   </div>
   <ToasterMessage
     v-model:show="modal.show"

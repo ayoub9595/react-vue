@@ -4,6 +4,23 @@
   padding: 20px;
   box-shadow: 2px 2px 2px 2px gray;
   background: #ebdfda;
+  position: relative;
+}
+.add-button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  background: yellow;
+  color:black;
+  transition: all 1s ease-in-out;
+}
+.add-button:hover {
+  background: black;
+  color:yellow;
+  border: none;
 }
 table,
 th,
