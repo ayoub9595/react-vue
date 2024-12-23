@@ -1,10 +1,34 @@
 <script setup lang="ts">
 import type { PropsType } from '@/PropsType'
+import { ref, watch } from 'vue';
+import EditIcon from './icons/EditIcon.vue';
+import DelelteIcon from './icons/DelelteIcon.vue';
+
+const editColor = ref<string[]>([]);
+const deleteColor = ref<string[]>([]);
 
 const props = withDefaults(defineProps<PropsType>(), {
   users: () => [],
   add: false
 })
+
+watch(() => props.users, (newUsers) => {
+  editColor.value = new Array(newUsers.length).fill('#000000');
+  deleteColor.value = new Array(newUsers.length).fill('#000000');
+}, { immediate: true, deep: true });
+
+
+const changeEditColor = (index: number, color: string) => {
+  const newColors = [...editColor.value];
+  newColors[index] = color;
+  editColor.value = newColors;
+}
+
+const changeDeleteColor = (index: number, color: string) => {
+  const newColors = [...deleteColor.value];
+  newColors[index] = color;
+  deleteColor.value = newColors;
+}
 
 const emit = defineEmits<{
   (e: 'handle-add'): void,
@@ -23,7 +47,7 @@ const handleClick = () => {
 
 <template>
   <div class="list-container">
-    <template v-if="users.length === 0">
+    <template v-if="props.users.length === 0">
       <h1>No users exists please add one</h1>
     </template>
     <template v-else>
@@ -36,6 +60,7 @@ const handleClick = () => {
             <th>Last name</th>
             <th>Birthdate</th>
             <th>Gender</th>
+            <th>...</th>
           </tr>
         </thead>
         <tbody>
@@ -44,6 +69,20 @@ const handleClick = () => {
             <td>{{ user.lastname }}</td>
             <td>{{ user.birthdate }}</td>
             <td>{{ user.gender }}</td>
+            <td>
+              <EditIcon className="button"
+                        :color="editColor[index]"
+                        height="30px" 
+                        width="30px"
+                        @mouseenter="() => changeEditColor(index, '#FFFFFF')"
+                        @mouseleave="() => changeEditColor(index, '#000000')" />
+              <DelelteIcon className="button"
+                        :color="deleteColor[index]"
+                        height="30px" 
+                        width="30px"
+                        @mouseenter="() => changeDeleteColor(index, '#FFFFFF')"
+                        @mouseleave="() => changeDeleteColor(index, '#000000')" />
+            </td>
           </tr>
         </tbody>
       </table>
@@ -116,5 +155,8 @@ td {
 .styled-table th:last-child,
 .styled-table td:last-child {
   border-right: none;
+}
+.button {
+  cursor: pointer;
 }
 </style>

@@ -1,7 +1,37 @@
+import { useEffect, useState } from "react";
 import { UserProptype } from "../../User";
+import DeleteIcon from "../icons/DeleteIcon";
+import EditIcon from "../icons/EditIcon";
 import style from "./UsersList.module.css";
 
 const UsersList: React.FC<UserProptype> = (props) => {
+
+  const [editColor,setEditColor] = useState<string[]>([])
+  const [deleteColor,setDeleteColor] = useState<string[]>([])
+
+  useEffect(() => {
+    if (props.users) {
+      setEditColor(new Array(props.users.length).fill('#000000'))
+      setDeleteColor(new Array(props.users.length).fill('#000000'))
+    }
+  }, [props.users])
+
+  const changeEditColor = (index: number,color: string) => {
+    setEditColor(prev => {
+      const newArray = [...prev];
+      newArray[index] = color;
+      return newArray;
+    })
+  }
+
+  const changeDeleteColor = (index: number,color: string) => {
+    setDeleteColor(prev => {
+      const newArray = [...prev];
+      newArray[index] = color;
+      return newArray;
+    })
+  }
+  
   const handleClick = () => {
     if(props.add) {
       props.handleAdd()
@@ -26,6 +56,7 @@ const UsersList: React.FC<UserProptype> = (props) => {
                   <th>Last name</th>
                   <th>Birthdate</th>
                   <th>Gender</th>
+                  <th>...</th>
                 </tr>
               </thead>
               <tbody>
@@ -35,6 +66,20 @@ const UsersList: React.FC<UserProptype> = (props) => {
                     <td>{user.lastname}</td>
                     <td>{user.birthdate}</td>
                     <td>{user.gender}</td>
+                    <td>
+                      <EditIcon className={style.button}
+                                color={editColor[index]}
+                                height="30px" 
+                                width="30px"
+                                onMouseEnter={() => changeEditColor(index,'#FFFFFF')}
+                                onMouseLeave={() => changeEditColor(index,'#000000')} />
+                      <DeleteIcon className={style.button}
+                                  color={deleteColor[index]}  
+                                  height="30px" 
+                                  width="30px"
+                                  onMouseEnter={() => changeDeleteColor(index,'#FFFFFF')}
+                                  onMouseLeave={() => changeDeleteColor(index,'#000000')} />
+                    </td>
                   </tr>
                 ))}
               </tbody>

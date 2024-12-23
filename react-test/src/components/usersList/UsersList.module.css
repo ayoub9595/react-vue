@@ -61,3 +61,7 @@ td {
 .styled-table td:last-child {
   border-right: none;
 }
+
+.button {
+  cursor: pointer;
+}
