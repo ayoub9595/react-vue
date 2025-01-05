@@ -10,11 +10,13 @@ const AddUser: React.FC<Props> = ({ emit }) => {
   const firstNameRef = useRef<HTMLInputElement>(null);
   const lastNameRef = useRef<HTMLInputElement>(null);
   const birthdateRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
   const genderRef = useRef<HTMLSelectElement>(null);
 
   const [firstnameError, setFirstNameError] = useState<boolean>(false);
   const [lastnameError, setLastnameError] = useState<boolean>(false);
   const [birthdateError, setBirthdateError] = useState<boolean>(false);
+  const [emailError, setEmailError] = useState<boolean>(false);
 
   const checkFirstname = () => {
     if (firstNameRef.current!.value === "") {
@@ -31,6 +33,12 @@ const AddUser: React.FC<Props> = ({ emit }) => {
       setBirthdateError(true);
     }
   };
+  const checkEmail = () => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    if (!emailRegex.test(emailRef.current!.value)) {
+      setEmailError(true)
+    }
+  }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -46,11 +54,12 @@ const AddUser: React.FC<Props> = ({ emit }) => {
       return;
     }   
 
-    const firstname = firstNameRef.current!.value;
-    const lastname = lastNameRef.current!.value;
-    const birthdate = birthdateRef.current!.value;
+    const firstName = firstNameRef.current!.value;
+    const lastName = lastNameRef.current!.value;
+    const birthDate = birthdateRef.current!.value;
+    const email = emailRef.current!.value;
     const gender = genderRef.current!.value;
-    const user: User = { firstname, lastname, birthdate, gender };
+    const user: User = { firstName, lastName, birthDate,email, gender };
     emit(user);
   };
 
@@ -89,11 +98,21 @@ const AddUser: React.FC<Props> = ({ emit }) => {
           className={`${birthdateError ? style["error-input"] : ""}`}
         />
         {birthdateError && <span>Please enter a valid birthdate</span>}
+        <label>Email:</label>
+        <input
+          ref={emailRef}
+          onFocus={() => {
+            setEmailError(false);
+          }}
+          onBlur={checkEmail}
+          className={`${emailError ? style["error-input"] : ""}`}
+        />
+        {emailError && <span>Please enter a valid email</span>}
         <label>Gender:</label>
         <select ref={genderRef}>
-          <option value="man">Man</option>
-          <option value="woman">Woman</option>
-          <option value="none">None</option>
+          <option value="MALE">Male</option>
+          <option value="FEMALE">Female</option>
+          <option value="NONE">None</option>
         </select>
         <button>Submit</button>
       </form>

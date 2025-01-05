@@ -5,13 +5,10 @@ import UsersList from './components/UsersList.vue'
 import type { User } from './User'
 import {
   addUser,
-  getAllUsers,
-  transformFirebaseResponse,
+  getAllUsers
 } from './service/userService'
 import BackDrop from './components/BackDrop.vue'
-import type { FirebaseAddResponse } from './FirebaseRepsonse'
 import ToasterMessage from './components/ToasterMessage.vue'
-import { handleApiError, logError } from './utils/ErrorHandler'
 
 const users = reactive<User[]>([])
 const loading = ref(false)
@@ -53,15 +50,13 @@ onMounted(async () => {
   loading.value = true
   try {
     const usersList = await getAllUsers()
-    const transformedUsers = transformFirebaseResponse(usersList)
-    users.length = 0
-    users.push(...transformedUsers)
+    users.push(...usersList)
   } catch (error) {
-    logError(error, 'fetchUsers')
-    const errorResponse = handleApiError(error)
     updateModal({
       show: true,
-      ...errorResponse,
+      class: 'danger',
+      title: 'Erreur',
+      message: error as string,
     })
   } finally {
     loading.value = false
@@ -70,20 +65,20 @@ onMounted(async () => {
 
 const addNewUser = async (user: User) => {
   try {
-    const data = (await addUser(user)) as FirebaseAddResponse
+    const addedUser = await addUser(user)
     updateModal({
       show: true,
       class: 'success',
       title: 'Success',
       message: 'User created successfully',
     })
-    users.push({ ...user, id: data.name })
+    users.push({ ...addedUser })
   } catch (error) {
-    logError(error, 'addNewUser')
-    const errorResponse = handleApiError(error)
     updateModal({
       show: true,
-      ...errorResponse,
+      class: 'danger',
+      title: 'Erreur',
+      message: error as string,
     })
   }
 }

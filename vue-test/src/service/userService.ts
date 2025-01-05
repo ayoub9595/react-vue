@@ -1,14 +1,7 @@
-import type { FirebaseGetResponse } from "@/FirebaseRepsonse";
 import type { User } from "@/User";
 
-const url = 'https://db-data-81e13-default-rtdb.europe-west1.firebasedatabase.app/users.json'
+const url = 'http://localhost:8080/api/users/';
 
-export const transformFirebaseResponse = (response: FirebaseGetResponse): User[] => {
-    return Object.entries(response).map(([key, value]) => ({
-      ...value,
-      id: key
-    }))
-  }
 
 export const getAllUsers = async() => {
     const response = await fetch(url);
@@ -23,5 +16,15 @@ export const addUser = async(user: User) => {
             'Content-Type': 'application/json'
         }
     })
+    if(!response.ok) {
+        const payload = await response.json()
+        console.log(payload)
+        throw new Error(payload.message)
+    }
+    return await response.json()
+}
+
+export const getUserById = async(id: number) => {
+    const response = await fetch(`${url}/${id}`);
     return await response.json()
 }

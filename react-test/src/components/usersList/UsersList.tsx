@@ -55,6 +55,7 @@ const UsersList: React.FC<UserProptype> = (props) => {
                   <th>First name</th>
                   <th>Last name</th>
                   <th>Birthdate</th>
+                  <th>Email</th>
                   <th>Gender</th>
                   <th>...</th>
                 </tr>
@@ -62,9 +63,10 @@ const UsersList: React.FC<UserProptype> = (props) => {
               <tbody>
                 {props.users.map((user, index) => (
                   <tr key={index}>
-                    <td>{user.firstname}</td>
-                    <td>{user.lastname}</td>
-                    <td>{user.birthdate}</td>
+                    <td>{user.firstName}</td>
+                    <td>{user.lastName}</td>
+                    <td>{user.birthDate}</td>
+                    <td>{user.email}</td>
                     <td>{user.gender}</td>
                     <td>
                       <EditIcon className={style.button}

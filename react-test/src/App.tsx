@@ -3,11 +3,9 @@ import style from "./App.module.css";
 import UsersList from "./components/usersList/UsersList";
 import AddUser from "./components/addUser/AddUser";
 import { User } from "./User";
-import { addUser, getAllUsers, transformFirebaseResponse } from "./service/userService";
+import { addUser, getAllUsers } from "./service/userService";
 import BackDrop from "./components/backdrop/BackDrop";
-import { FirebaseAddResponse } from "./service/FirebaseResponse";
 import Toaster from "./components/toaster/Toaster";
-import { handleApiError, logError } from "./utils/ErrorHandler";
 
 const App = () => {
   const [showAddUser,setShowAddUser] = useState(false);
@@ -23,8 +21,8 @@ const App = () => {
 
   const addNewUser = async (user: User) => {
     try {
-      const data = await addUser(user) as FirebaseAddResponse;
-      setUsers([...users, { ...user, id: data.name }]);
+      const addedUser = await addUser(user)
+      setUsers([...users, addedUser]);
       
       setModal({
         show: true,
@@ -33,11 +31,11 @@ const App = () => {
         message: 'User created successfully'
       });
     } catch (error) {
-      logError(error, 'addNewUser');
-      const errorResponse = handleApiError(error);
       setModal({
         show: true,
-        ...errorResponse
+        class: 'danger',
+        title: 'Error',
+        message: error instanceof Error ? error.message : 'Error to create user'
       });
     }
   };
@@ -46,14 +44,13 @@ const App = () => {
     try {
       setLoading(true);
       const usersList = await getAllUsers();
-      const transformedUsers = transformFirebaseResponse(usersList);
-      setUsers(transformedUsers);
+      setUsers(usersList);
     } catch (error) {
-      logError(error, 'fetchUsers');
-      const errorResponse = handleApiError(error);
       setModal({
         show: true,
-        ...errorResponse
+        class: 'danger',
+        title: 'Error',
+        message: error instanceof Error ? error.message : 'Error to fetch users'
       });
     } finally {
       setLoading(false);

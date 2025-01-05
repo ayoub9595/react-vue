@@ -59,15 +59,17 @@ const handleClick = () => {
             <th>First name</th>
             <th>Last name</th>
             <th>Birthdate</th>
+            <th>Email</th>
             <th>Gender</th>
             <th>...</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(user, index) in props.users" :key="index">
-            <td>{{ user.firstname }}</td>
-            <td>{{ user.lastname }}</td>
-            <td>{{ user.birthdate }}</td>
+            <td>{{ user.firstName }}</td>
+            <td>{{ user.lastName }}</td>
+            <td>{{ user.birthDate }}</td>
+            <td>{{ user.email }}</td>
             <td>{{ user.gender }}</td>
             <td>
               <EditIcon className="button"

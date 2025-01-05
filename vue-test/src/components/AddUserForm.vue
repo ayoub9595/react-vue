@@ -3,9 +3,15 @@
 import type { User } from '@/User';
 import { reactive, ref } from 'vue';
 
-const user = reactive<User>({firstname: '',lastname: '',birthdate: '', gender: 'Man'})
+const user = reactive<User>({
+  firstName: '',
+  lastName: '',
+  birthDate: '',
+  email: '',
+  gender: 'MALE'})
 const firstnameError = ref(false);
 const lastnameError = ref(false);
+const emailError = ref(false);
 const birthdateError = ref(false);
 
 const emit = defineEmits<{
@@ -13,29 +19,39 @@ const emit = defineEmits<{
 }>();
 
 const checkFirstname = () => {
-    if(user.firstname.length === 0) {
+    if(user.firstName.length === 0) {
         firstnameError.value = true
     } 
 }
 const checkLastname = () => {
-    if(user.lastname.length === 0) {
+    if(user.lastName.length === 0) {
         lastnameError.value = true
     } 
 }
 
+const checkEmail = () => {
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+  if (!emailRegex.test(user.email)) {
+    emailError.value = true
+  }
+
+}
+
 const checkBirthdate = () => {
-    if(user.birthdate.length === 0) {
+    if(user.birthDate.length === 0) {
         birthdateError.value = true
     } 
 }
 const initialiseFirstname= () => firstnameError.value = false;
 const initialiseLastname= () => lastnameError.value = false;
 const initialiseBirthdate= () => birthdateError.value = false;
+const initialiseEmail= () => emailError.value = false;
 
 const handleSubmit = () => {
     checkFirstname()
     checkLastname()
     checkBirthdate()
+    checkEmail();
     if(firstnameError.value || lastnameError.value || birthdateError.value) {
         return;
     }
@@ -56,14 +72,14 @@ const handleSubmit = () => {
       <input @focus="initialiseFirstname"
              @blur="checkFirstname"
              :class="{['error-input']: firstnameError}"
-             v-model="user.firstname"
+             v-model="user.firstName"
       />
       <span v-if="firstnameError">Please enter a valid first name</span>
       <label>Last name:</label>
       <input @focus="initialiseLastname"
              @blur="checkLastname"
              :class="{['error-input']: lastnameError}" 
-             v-model="user.lastname"
+             v-model="user.lastName"
       />
       <span v-if="lastnameError">Please enter a valid last name</span>
       <label>Birthdate:</label>
@@ -71,14 +87,21 @@ const handleSubmit = () => {
              @blur="checkBirthdate" 
              type="date"
              :class="{['error-input']: birthdateError}" 
-             v-model="user.birthdate"
+             v-model="user.birthDate"
       />
       <span v-if="birthdateError">Please enter a valid birthdate</span>
+      <label>Email:</label>
+      <input @focus="initialiseEmail"
+             @blur="checkEmail" 
+             :class="{['error-input']: emailError}" 
+             v-model="user.email"
+      />
+      <span v-if="emailError">Please enter a valid email</span>
       <label>Gender:</label>
       <select v-model="user.gender">
-        <option value="Man">Man</option>
-        <option value="Woman">Woman</option>
-        <option value="None">None</option>
+        <option value="MALE">Male</option>
+        <option value="FEMALE">Female</option>
+        <option value="NONE">None</option>
       </select>
       <button>Submit</button>
     </form>
