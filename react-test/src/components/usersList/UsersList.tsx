@@ -74,13 +74,15 @@ const UsersList: React.FC<UserProptype> = (props) => {
                                 height="30px" 
                                 width="30px"
                                 onMouseEnter={() => changeEditColor(index,'#FFFFFF')}
-                                onMouseLeave={() => changeEditColor(index,'#000000')} />
+                                onMouseLeave={() => changeEditColor(index,'#000000')}
+                                onClick={() => props.handleEditClick(user.id)} />
                       <DeleteIcon className={style.button}
                                   color={deleteColor[index]}  
                                   height="30px" 
                                   width="30px"
                                   onMouseEnter={() => changeDeleteColor(index,'#FFFFFF')}
-                                  onMouseLeave={() => changeDeleteColor(index,'#000000')} />
+                                  onMouseLeave={() => changeDeleteColor(index,'#000000')}
+                                  onClick={() => props.handleDeleteClick(user.id)} />
                     </td>
                   </tr>
                 ))}

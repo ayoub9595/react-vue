@@ -4,7 +4,8 @@ const DeleteIcon = ({
   className,
   color,
   onMouseEnter,
-  onMouseLeave
+  onMouseLeave,
+  onClick
 }: {
   height: string;
   width: string;
@@ -12,6 +13,7 @@ const DeleteIcon = ({
   color: string;
   onMouseEnter: () =>void;
   onMouseLeave: () =>void;
+  onClick: () =>void;
 }) => {
   return (
     <>
@@ -24,6 +26,7 @@ const DeleteIcon = ({
         className={className}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
+        onClick={onClick}
       >
         <path
           d="M4 7H20"

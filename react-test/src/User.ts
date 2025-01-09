@@ -12,4 +12,6 @@ export interface UserProptype {
     add:boolean;
     handleAdd: () => void;
     handleDisableAdd: () => void;
+    handleEditClick: (id:string|undefined) => void;
+    handleDeleteClick: (id:string|undefined) => void;
 };

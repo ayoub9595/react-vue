@@ -3,17 +3,18 @@ import { onMounted, reactive, ref } from 'vue'
 import AddUserForm from './components/AddUserForm.vue'
 import UsersList from './components/UsersList.vue'
 import type { User } from './User'
-import {
-  addUser,
-  getAllUsers
-} from './service/userService'
+import { addUser, getAllUsers } from './service/userService'
 import BackDrop from './components/BackDrop.vue'
 import ToasterMessage from './components/ToasterMessage.vue'
+import EditUserForm from './components/EditUserForm.vue'
+import { updateUser } from './service/userService'
 
 const users = reactive<User[]>([])
 const loading = ref(false)
-const add = ref(true);
+const add = ref(true)
 const showAdd = ref(false)
+const showEdit = ref(false)
+const userIdtoEdit = ref(0)
 
 const handleAdd = () => {
   add.value = false
@@ -23,7 +24,6 @@ const handleAdd = () => {
 const handleDisableAdd = () => {
   add.value = true
   showAdd.value = false
-
 }
 
 const modal = reactive({
@@ -82,22 +82,59 @@ const addNewUser = async (user: User) => {
     })
   }
 }
+const handleEdit = (id: number) => {
+  showEdit.value = true
+  userIdtoEdit.value = id
+}
+const handleExitEditForm = () => {
+  showEdit.value = false
+}
+const updateExistingUser = async (user: User) => {
+  try {
+    const updatedUser = await updateUser(user)
+    const index = users.findIndex(u => (u.id === updatedUser.id))
+    users[index] = updatedUser
+    showEdit.value = false
+    updateModal({
+      show: true,
+      class: 'success',
+      title: 'Success',
+      message: 'User modified successfully',
+    })
+  } catch (error) {
+    updateModal({
+      show: true,
+      class: 'danger',
+      title: 'Erreur',
+      message: error as string,
+    })
+  }
+}
 </script>
 
 <template>
   <div class="container">
     <BackDrop v-if="loading" />
     <AddUserForm v-if="showAdd" @add-user="addNewUser" />
-    <UsersList  :add="add"
-                :users="users"
-                @handle-add="handleAdd" 
-                @handle-disable-add="handleDisableAdd" />
+    <UsersList
+      :add="add"
+      :users="users"
+      @handle-add="handleAdd"
+      @handle-disable-add="handleDisableAdd"
+      @handle-edit="handleEdit"
+    />
   </div>
   <ToasterMessage
     v-model:show="modal.show"
     :class="modal.class"
     :title="modal.title"
     :message="modal.message"
+  />
+  <EditUserForm
+    v-if="showEdit"
+    :id="userIdtoEdit"
+    @handle-exit="handleExitEditForm"
+    @update-user="updateExistingUser"
   />
 </template>
 

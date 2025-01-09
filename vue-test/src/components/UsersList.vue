@@ -32,7 +32,8 @@ const changeDeleteColor = (index: number, color: string) => {
 
 const emit = defineEmits<{
   (e: 'handle-add'): void,
-  (e:'handle-disable-add'): void
+  (e:'handle-disable-add'): void,
+  (e:'handle-edit',id: number): void,
 }>();
 
 const handleClick = () => {
@@ -42,6 +43,15 @@ const handleClick = () => {
   else {
     emit('handle-disable-add')
   }
+}
+
+const handleEdit = (strId: string | undefined) => {
+  const id = strId ? parseInt(strId) : 0;
+  emit('handle-edit',id)
+}
+
+const handleDelete = () => {
+  console.log('Delete clicked');
 }
 </script>
 
@@ -65,7 +75,7 @@ const handleClick = () => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(user, index) in props.users" :key="index">
+          <tr v-for="(user, index) in props.users" :key="user.id">
             <td>{{ user.firstName }}</td>
             <td>{{ user.lastName }}</td>
             <td>{{ user.birthDate }}</td>
@@ -77,13 +87,15 @@ const handleClick = () => {
                         height="30px" 
                         width="30px"
                         @mouseenter="() => changeEditColor(index, '#FFFFFF')"
-                        @mouseleave="() => changeEditColor(index, '#000000')" />
+                        @mouseleave="() => changeEditColor(index, '#000000')"
+                        @click="()=> handleEdit(user.id)" />
               <DelelteIcon className="button"
                         :color="deleteColor[index]"
                         height="30px" 
                         width="30px"
                         @mouseenter="() => changeDeleteColor(index, '#FFFFFF')"
-                        @mouseleave="() => changeDeleteColor(index, '#000000')" />
+                        @mouseleave="() => changeDeleteColor(index, '#000000')"
+                        @click="handleDelete" />
             </td>
           </tr>
         </tbody>
