@@ -40,8 +40,24 @@ export const updateUser = async(user: User) => {
     })
     if(!response.ok) {
         const payload = await response.json()
-        console.log(payload)
         throw new Error(payload.message)
     }
     return await response.json()
+}
+
+export const deleteUserById = async(id: number) => {
+    const response = await fetch(`${url}${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error(`Failed to delete user: ${response.status} ${response.statusText}`);
+    }
+
+    if (response.status !== 204) {
+        return await response.json();
+    }
 }

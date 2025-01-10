@@ -159,7 +159,7 @@ const EditUser = ({
               </div>
             </div>
             <div className={styles["form-group"]}>
-              <button>Submit</button>
+              <button className={styles.button}>Submit</button>
             </div>
           </form>
         </div>

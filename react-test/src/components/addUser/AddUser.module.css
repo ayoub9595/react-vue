@@ -24,7 +24,7 @@ select {
     border: 1px solid red;
     background: lightsalmon;
 }
-button {
+.button {
   height: 30px;
   width: 100px;
   border: none;
@@ -34,7 +34,7 @@ button {
   color: white;
   
 }
-button:hover {
+.button:hover {
   background: white;
   color: black; 
   border: 1px solid black; 

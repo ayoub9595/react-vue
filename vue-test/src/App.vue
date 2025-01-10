@@ -3,11 +3,12 @@ import { onMounted, reactive, ref } from 'vue'
 import AddUserForm from './components/AddUserForm.vue'
 import UsersList from './components/UsersList.vue'
 import type { User } from './User'
-import { addUser, getAllUsers } from './service/userService'
+import { addUser, deleteUserById, getAllUsers } from './service/userService'
 import BackDrop from './components/BackDrop.vue'
 import ToasterMessage from './components/ToasterMessage.vue'
 import EditUserForm from './components/EditUserForm.vue'
 import { updateUser } from './service/userService'
+import DeleteUser from './components/DeleteUser.vue'
 
 const users = reactive<User[]>([])
 const loading = ref(false)
@@ -15,6 +16,8 @@ const add = ref(true)
 const showAdd = ref(false)
 const showEdit = ref(false)
 const userIdtoEdit = ref(0)
+const showDelete = ref(false)
+const userIdtoDelete = ref(0)
 
 const handleAdd = () => {
   add.value = false
@@ -92,7 +95,7 @@ const handleExitEditForm = () => {
 const updateExistingUser = async (user: User) => {
   try {
     const updatedUser = await updateUser(user)
-    const index = users.findIndex(u => (u.id === updatedUser.id))
+    const index = users.findIndex(u => u.id === updatedUser.id)
     users[index] = updatedUser
     showEdit.value = false
     updateModal({
@@ -110,6 +113,37 @@ const updateExistingUser = async (user: User) => {
     })
   }
 }
+const handleDelete = (id: number) => {
+  userIdtoDelete.value = id
+  showDelete.value = true
+}
+const deleteUser = async () => {
+  try {
+    await deleteUserById(userIdtoDelete.value)
+    const index = users.findIndex(
+      user => user.id == userIdtoDelete.value.toString(),
+    )
+    users.splice(index, 1)
+    updateModal({
+      show: true,
+      class: 'success',
+      title: 'Success',
+      message: 'User deleted successfully',
+    })
+  } catch (error) {
+    updateModal({
+      show: true,
+      class: 'danger',
+      title: 'Erreur',
+      message: error as string,
+    })
+  } finally {
+    showDelete.value = false
+  }
+}
+const hideDeleteUser = () => {
+  showDelete.value = false
+}
 </script>
 
 <template>
@@ -122,6 +156,7 @@ const updateExistingUser = async (user: User) => {
       @handle-add="handleAdd"
       @handle-disable-add="handleDisableAdd"
       @handle-edit="handleEdit"
+      @handle-delete="handleDelete"
     />
   </div>
   <ToasterMessage
@@ -135,6 +170,11 @@ const updateExistingUser = async (user: User) => {
     :id="userIdtoEdit"
     @handle-exit="handleExitEditForm"
     @update-user="updateExistingUser"
+  />
+  <DeleteUser
+    v-if="showDelete"
+    @handle-delete="deleteUser"
+    @handle-cancel-delete="hideDeleteUser"
   />
 </template>
 

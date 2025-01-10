@@ -34,6 +34,7 @@ const emit = defineEmits<{
   (e: 'handle-add'): void,
   (e:'handle-disable-add'): void,
   (e:'handle-edit',id: number): void,
+  (e:'handle-delete',id: number): void,
 }>();
 
 const handleClick = () => {
@@ -50,8 +51,9 @@ const handleEdit = (strId: string | undefined) => {
   emit('handle-edit',id)
 }
 
-const handleDelete = () => {
-  console.log('Delete clicked');
+const handleDelete = (strId: string | undefined) => {
+  const id = strId ? parseInt(strId) : 0
+  emit('handle-delete',id)
 }
 </script>
 
@@ -95,7 +97,7 @@ const handleDelete = () => {
                         width="30px"
                         @mouseenter="() => changeDeleteColor(index, '#FFFFFF')"
                         @mouseleave="() => changeDeleteColor(index, '#000000')"
-                        @click="handleDelete" />
+                        @click="() =>handleDelete(user.id)" />
             </td>
           </tr>
         </tbody>

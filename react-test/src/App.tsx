@@ -3,10 +3,11 @@ import style from "./App.module.css";
 import UsersList from "./components/usersList/UsersList";
 import AddUser from "./components/addUser/AddUser";
 import { User } from "./User";
-import { addUser, getAllUsers, updateUser } from "./service/userService";
+import { addUser, deleteUserById, getAllUsers, updateUser } from "./service/userService";
 import BackDrop from "./components/backdrop/BackDrop";
 import Toaster from "./components/toaster/Toaster";
 import EditUser from "./components/editUser/EditUser";
+import DeleteUser from "./components/deleteUser/DeleteUser";
 
 const App = () => {
   const [showAddUser,setShowAddUser] = useState(false);
@@ -15,6 +16,8 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [userIdToEdit,setUserIdToEdit] = useState(0);
   const [showEditUser,setShowEditUser] = useState(false)
+  const [userIdToDelete,setUserIdToDelete] = useState(0);
+  const [showDeleteUser,setShowDeleteUser] = useState(false)
   const [modal, setModal] = useState({
     show: false,
     class: '',
@@ -75,8 +78,10 @@ const App = () => {
     setShowEditUser(true)
   }
 
-  const handleDeleteClick = (id: string|undefined) => {
-    console.log(id);
+  const handleDeleteClick = (strId: string|undefined) => {
+    const id = strId ? parseInt(strId) : 0;
+    setUserIdToDelete(id);
+    setShowDeleteUser(true);
   }
 
   const fetchUsers = async () => {
@@ -95,6 +100,36 @@ const App = () => {
       setLoading(false);
     }
   };
+
+  const deleteUser =  async() => {
+    try {
+    await deleteUserById(userIdToDelete)
+    const index = users.findIndex(
+      user => user.id == userIdToDelete.toString(),
+    )
+    users.splice(index, 1)
+    setModal({
+      show: true,
+      class: 'success',
+      title: 'Success',
+      message: 'User deleted successfully',
+    })
+  } catch (error) {
+    setModal({
+      show: true,
+      class: 'danger',
+      title: 'Erreur',
+      message: error as string,
+    })
+  } finally {
+    setShowDeleteUser(false);
+  }
+    
+  }
+
+  const hideDelete = () => {
+    setShowDeleteUser(false);
+  }
 
   useEffect(() => {
     fetchUsers();
@@ -130,6 +165,7 @@ const App = () => {
       {showEditUser && <EditUser id={userIdToEdit.toString()}
                                  handleClose={() =>setShowEditUser(false)}
                                  emit={updateExistingUser} />}
+      {showDeleteUser && <DeleteUser handleYes={deleteUser} handleNo={hideDelete} />   }                        
     </div>
   );
 };

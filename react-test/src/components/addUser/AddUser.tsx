@@ -114,7 +114,7 @@ const AddUser: React.FC<Props> = ({ emit }) => {
           <option value="FEMALE">Female</option>
           <option value="NONE">None</option>
         </select>
-        <button>Submit</button>
+        <button className={style.button}>Submit</button>
       </form>
     </div>
   );

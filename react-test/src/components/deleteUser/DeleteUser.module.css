@@ -1,0 +1,56 @@
+.backdrop {
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .container {
+    height: 200px;
+    width: 500px;
+    background: gainsboro;
+    border-radius: 20px;
+  }
+  .title {
+    padding: 10px 20px;
+    border-bottom: 1px solid black;
+    font-size: 1.7rem;
+    display: flex;
+    justify-content: space-between;
+  }
+  .title span {
+    color: black;
+  }
+  .exit {
+    cursor: pointer;
+  }
+  .description {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+  }
+  .buttons {
+    padding: 0 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+  }
+  .button {
+    border: none;
+    height: 30px;
+    width: 100px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .yes-button {
+    background: lightgreen;
+    color: black;
+  }
+  
+  .no-button {
+    background: lightcoral;
+    color: white;
+  }
