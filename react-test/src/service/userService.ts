@@ -1,63 +1,93 @@
+import { refreshToken } from "./authenticationService";
+import { setAuthTokens, getAccessToken, getRefreshToken } from "../utils/authUtils";
 import { User } from "../User";
 
+const BASE_URL = 'http://localhost:8080/api/users/';
 
-const url = 'http://localhost:8080/api/users/';
+const getAuthHeaders = () => {
+    const token = getAccessToken();
+    return {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : ''
+    };
+};
 
+const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+    let headers = {
+        ...getAuthHeaders(),
+        ...options.headers
+    };
 
-export const getAllUsers = async(): Promise<User[]> => {
-    const response = await fetch(url);
-    return await response.json()
-}
-
-export const addUser = async(user: User): Promise<User> => {
-    const response = await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(user),
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
+    let response = await fetch(url, {
+        ...options,
+        headers,
     });
-    const data = await response.json();
-    if(!response.ok) {
-        throw new Error(data.message)
-    }
-    return data;
-}
 
-export const getUserById = async(id: number) : Promise<User> => {
-    const response = await fetch(`${url}${id}`);
-    return await response.json()
-}
-
-export const updateUser = async(user: User) => {
-    const response = await fetch(url, {
-        method: 'PUT',
-        body: JSON.stringify(user),
-        headers: {
-            'Content-Type': 'application/json'
+    // If token is expired, try to refresh it
+    if (response.status === 401) {
+        const refreshTokenStr = getRefreshToken();
+        if (refreshTokenStr) {
+            try {
+                const newTokens = await refreshToken({ refreshToken: refreshTokenStr });
+                setAuthTokens(newTokens);
+                
+                // Retry the original request with new token
+                headers = {
+                    ...getAuthHeaders(),
+                    ...options.headers
+                };
+                
+                response = await fetch(url, {
+                    ...options,
+                    headers,
+                });
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            } catch (error) {
+                // If refresh fails, redirect to login
+                window.location.href = '/login';
+                throw new Error('Session expired. Please login again.');
+            }
         }
-    })
-    if(!response.ok) {
-        const payload = await response.json()
-        throw new Error(payload.message)
     }
-    return await response.json()
-}
-
-export const deleteUserById = async(id: number) => {
-    const response = await fetch(`${url}${id}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
 
     if (!response.ok) {
-        throw new Error(`Failed to delete user: ${response.status} ${response.statusText}`);
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.message || `HTTP error! status: ${response.status}`);
     }
 
-    if (response.status !== 204) {
-        return await response.json();
+    if (response.status === 204) {
+        return null;
     }
-}
+
+    return response.json();
+};
+
+// Your existing CRUD operations remain the same
+export const getAllUsers = async (): Promise<User[]> => {
+    return fetchWithAuth(BASE_URL);
+};
+
+export const getUserById = async (id: number): Promise<User> => {
+    return fetchWithAuth(`${BASE_URL}${id}`);
+};
+
+export const addUser = async (user: User): Promise<User> => {
+    return fetchWithAuth(BASE_URL, {
+        method: 'POST',
+        body: JSON.stringify(user)
+    });
+};
+
+export const updateUser = async (user: User): Promise<User> => {
+    return fetchWithAuth(BASE_URL, {
+        method: 'PUT',
+        body: JSON.stringify(user)
+    });
+};
+
+export const deleteUserById = async (id: number): Promise<void> => {
+    return fetchWithAuth(`${BASE_URL}${id}`, {
+        method: 'DELETE'
+    });
+};

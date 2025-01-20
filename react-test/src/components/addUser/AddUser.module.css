@@ -5,14 +5,14 @@
     box-shadow: 2px 2px 2px 2px gray;
     background: lightgreen;
 }
-form {
+.form {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
 }
-input,
-select {
+.input,
+.select {
   box-sizing: border-box;
   height: 35px;
   width: 200px;

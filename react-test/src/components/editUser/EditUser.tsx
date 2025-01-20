@@ -98,7 +98,7 @@ const EditUser = ({
               X
             </div>
           </div>
-          <form onSubmit={handleSubmit}>
+          <form className={styles.form} onSubmit={handleSubmit}>
             <div className={styles["form-inputs"]}>
               <div className={styles["form-group"]}>
                 <label>First name:</label>
@@ -108,7 +108,7 @@ const EditUser = ({
                     setFirstNameError(false);
                   }}
                   onBlur={checkFirstname}
-                  className={`${firstnameError ? styles["error-input"] : ""}`}
+                  className={`${styles.input} ${firstnameError ? styles["error-input"] : ""}`}
                 />
                 {firstnameError && <span>Please enter a valid first name</span>}
               </div>
@@ -120,7 +120,7 @@ const EditUser = ({
                     setLastnameError(false);
                   }}
                   onBlur={checkLastname}
-                  className={`${lastnameError ? styles["error-input"] : ""}`}
+                  className={`${styles.input} ${lastnameError ? styles["error-input"] : ""}`}
                 />
                 {lastnameError && <span>Please enter a valid last name</span>}
               </div>
@@ -133,7 +133,7 @@ const EditUser = ({
                   }}
                   onBlur={checkBirthdate}
                   type="date"
-                  className={`${birthdateError ? styles["error-input"] : ""}`}
+                  className={`${styles.input} ${birthdateError ? styles["error-input"] : ""}`}
                 />
                 {birthdateError && <span>Please enter a valid birthdate</span>}
               </div>
@@ -145,13 +145,13 @@ const EditUser = ({
                     setEmailError(false);
                   }}
                   onBlur={checkEmail}
-                  className={`${emailError ? styles["error-input"] : ""}`}
+                  className={`${styles.input} ${emailError ? styles["error-input"] : ""}`}
                 />
                 {emailError && <span>Please enter a valid email</span>}
               </div>
               <div id="select-div" className={styles["form-group"]}>
                 <label>Gender:</label>
-                <select ref={genderRef}>
+                <select className={styles.select} ref={genderRef}>
                   <option value="MALE">Male</option>
                   <option value="FEMALE">Female</option>
                   <option value="NONE">None</option>

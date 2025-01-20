@@ -66,7 +66,7 @@ const AddUser: React.FC<Props> = ({ emit }) => {
   return (
     <div className={style["form-container"]}>
       <h1>Add User</h1>
-      <form onSubmit={handleSubmit}>
+      <form className={style.form} onSubmit={handleSubmit}>
         <label>First name:</label>
         <input
           ref={firstNameRef}
@@ -74,7 +74,7 @@ const AddUser: React.FC<Props> = ({ emit }) => {
             setFirstNameError(false);
           }}
           onBlur={checkFirstname}
-          className={`${firstnameError ? style["error-input"] : ""}`}
+          className={`${style.input} ${firstnameError ? style["error-input"] : ""}`}
         />
         {firstnameError && <span>Please enter a valid first name</span>}
         <label>Last name:</label>
@@ -84,7 +84,7 @@ const AddUser: React.FC<Props> = ({ emit }) => {
             setLastnameError(false);
           }}
           onBlur={checkLastname}
-          className={`${lastnameError ? style["error-input"] : ""}`}
+          className={`${style.input} ${lastnameError ? style["error-input"] : ""}`}
         />
         {lastnameError && <span>Please enter a valid last name</span>}
         <label>Birthdate:</label>
@@ -95,7 +95,7 @@ const AddUser: React.FC<Props> = ({ emit }) => {
           }}
           onBlur={checkBirthdate}
           type="date"
-          className={`${birthdateError ? style["error-input"] : ""}`}
+          className={`${style.input} ${birthdateError ? style["error-input"] : ""}`}
         />
         {birthdateError && <span>Please enter a valid birthdate</span>}
         <label>Email:</label>
@@ -105,11 +105,11 @@ const AddUser: React.FC<Props> = ({ emit }) => {
             setEmailError(false);
           }}
           onBlur={checkEmail}
-          className={`${emailError ? style["error-input"] : ""}`}
+          className={`${style.input} ${emailError ? style["error-input"] : ""}`}
         />
         {emailError && <span>Please enter a valid email</span>}
         <label>Gender:</label>
-        <select ref={genderRef}>
+        <select className={style.select} ref={genderRef}>
           <option value="MALE">Male</option>
           <option value="FEMALE">Female</option>
           <option value="NONE">None</option>

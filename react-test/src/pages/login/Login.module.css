@@ -1,0 +1,51 @@
+.parent {
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  position: relative;
+  background: wheat;
+}
+
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 2px 2px 2px 2px gray;
+  background: white;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.input {
+  box-sizing: border-box;
+  height: 35px;
+  width: 300px;
+  border-radius: 8px;
+  border: 1px solid black;
+  padding: 0 5px;
+}
+
+.button {
+  height: 30px;
+  width: 100px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: black;
+  color: white;
+}
+
+.error-input {
+  border: 1px solid red;
+  background: lightsalmon;
+}

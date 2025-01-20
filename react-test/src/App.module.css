@@ -1,4 +1,4 @@
-.container {
-    display: flex;
-    gap: 50px;
+body {
+    margin: 0;
+    padding: 0;
 }

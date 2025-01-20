@@ -5,6 +5,7 @@ export interface User {
     birthDate: string;
     email: string;
     gender: string;
+    role: string;
 };
 
 export interface UserProptype {

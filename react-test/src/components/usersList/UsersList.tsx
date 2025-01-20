@@ -9,6 +9,10 @@ const UsersList: React.FC<UserProptype> = (props) => {
   const [editColor,setEditColor] = useState<string[]>([])
   const [deleteColor,setDeleteColor] = useState<string[]>([])
 
+  const getRole = (role:string) => {
+    return role.split('_')[1];
+  }
+
   useEffect(() => {
     if (props.users) {
       setEditColor(new Array(props.users.length).fill('#000000'))
@@ -57,6 +61,7 @@ const UsersList: React.FC<UserProptype> = (props) => {
                   <th>Birthdate</th>
                   <th>Email</th>
                   <th>Gender</th>
+                  <th>Role</th>
                   <th>...</th>
                 </tr>
               </thead>
@@ -68,6 +73,7 @@ const UsersList: React.FC<UserProptype> = (props) => {
                     <td>{user.birthDate}</td>
                     <td>{user.email}</td>
                     <td>{user.gender}</td>
+                    <td>{getRole(user.role)}</td>
                     <td>
                       <EditIcon className={style.button}
                                 color={editColor[index]}

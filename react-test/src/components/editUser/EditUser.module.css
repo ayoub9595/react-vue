@@ -26,7 +26,7 @@
       cursor: pointer;
       font-size: 2rem;
   }
-  form {
+  .form {
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -43,8 +43,8 @@
     display: flex;
     flex-direction: column;
   }
-  input,
-  select {
+  .input,
+  .select {
     box-sizing: border-box;
     height: 35px;
     width: 300px;
