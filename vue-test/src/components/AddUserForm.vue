@@ -8,7 +8,8 @@ const user = reactive<User>({
   lastName: '',
   birthDate: '',
   email: '',
-  gender: 'MALE'})
+  gender: 'MALE',
+  role: 'ROLE_USER'})
 const firstnameError = ref(false);
 const lastnameError = ref(false);
 const emailError = ref(false);

@@ -68,7 +68,7 @@ const EditUser = ({
     const birthDate = birthdateRef.current!.value;
     const email = emailRef.current!.value;
     const gender = genderRef.current!.value;
-    const user: User = { firstName, lastName, birthDate, email, gender };
+    const user: User = { firstName, lastName, birthDate, email, gender, role: 'ROLE_USER'};
     emit({ id, ...user });
   };
 

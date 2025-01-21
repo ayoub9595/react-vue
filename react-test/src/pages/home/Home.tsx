@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import style from "./HOME.module.css";
+import style from "./Home.module.css";
 import UsersList from "../../components/usersList/UsersList";
 import AddUser from "../../components/addUser/AddUser";
 import { User } from "../../User";

@@ -21,6 +21,7 @@ const user = reactive<User>({
   birthDate: '',
   email: '',
   gender: '',
+  role: ''
 })
 const firstnameError = ref(false)
 const lastnameError = ref(false)

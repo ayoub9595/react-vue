@@ -30,6 +30,10 @@ const changeDeleteColor = (index: number, color: string) => {
   deleteColor.value = newColors;
 }
 
+const getRole = (role:string) => {
+    return role.split('_')[1];
+  }
+
 const emit = defineEmits<{
   (e: 'handle-add'): void,
   (e:'handle-disable-add'): void,
@@ -73,6 +77,7 @@ const handleDelete = (strId: string | undefined) => {
             <th>Birthdate</th>
             <th>Email</th>
             <th>Gender</th>
+            <th>Role</th>
             <th>...</th>
           </tr>
         </thead>
@@ -83,6 +88,7 @@ const handleDelete = (strId: string | undefined) => {
             <td>{{ user.birthDate }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.gender }}</td>
+            <td>{{ getRole(user.role) }}</td>
             <td>
               <EditIcon className="button"
                         :color="editColor[index]"
