@@ -3,12 +3,15 @@ import { onMounted, reactive, ref } from 'vue'
 import AddUserForm from '../components/AddUserForm.vue'
 import UsersList from '../components/UsersList.vue'
 import type { User } from '../User'
-import { addUser, deleteUserById, getAllUsers } from '../service/userService'
+import { addUser, deleteUserById, getUsers } from '../service/userService'
 import BackDrop from '../components/BackDrop.vue'
 import ToasterMessage from '../components/ToasterMessage.vue'
 import EditUserForm from '../components/EditUserForm.vue'
 import { updateUser } from '../service/userService'
 import DeleteUser from '../components/DeleteUser.vue'
+import LogoutIcon from '@/components/icons/LogoutIcon.vue'
+import { clearAuthTokens } from '@/utils/authUtils'
+import router from '@/router'
 
 const users = reactive<User[]>([])
 const loading = ref(false)
@@ -18,6 +21,7 @@ const showEdit = ref(false)
 const userIdtoEdit = ref(0)
 const showDelete = ref(false)
 const userIdtoDelete = ref(0)
+const logoutColor = ref('#FFF');
 
 const handleAdd = () => {
   add.value = false
@@ -52,7 +56,7 @@ const updateModal = (newModalState: typeof modal) => {
 onMounted(async () => {
   loading.value = true
   try {
-    const usersList = await getAllUsers()
+    const usersList = await getUsers()
     users.push(...usersList)
   } catch (error) {
     updateModal({
@@ -144,43 +148,70 @@ const deleteUser = async () => {
 const hideDeleteUser = () => {
   showDelete.value = false
 }
+const handleLogoutClick = () => {
+  clearAuthTokens();
+  router.push('/')
+}
 </script>
 
 <template>
-  <div class="container">
-    <BackDrop v-if="loading" />
-    <AddUserForm v-if="showAdd" @add-user="addNewUser" />
-    <UsersList
-      :add="add"
-      :users="users"
-      @handle-add="handleAdd"
-      @handle-disable-add="handleDisableAdd"
-      @handle-edit="handleEdit"
-      @handle-delete="handleDelete"
+  <div class="home-page">
+    <div class="container">
+      <BackDrop v-if="loading" />
+      <AddUserForm v-if="showAdd" @add-user="addNewUser" />
+      <button class="logout-button"
+              @mouseleave="() => logoutColor = ('#FFF')"
+              @mouseenter="() => logoutColor = ('#000')"
+              @click="handleLogoutClick">
+        <LogoutIcon height="40px" width="40px" :color="logoutColor" />
+      </button>
+      <UsersList
+        :add="add"
+        :users="users"
+        @handle-add="handleAdd"
+        @handle-disable-add="handleDisableAdd"
+        @handle-edit="handleEdit"
+        @handle-delete="handleDelete"
+      />
+    </div>
+    <ToasterMessage
+      v-model:show="modal.show"
+      :class="modal.class"
+      :title="modal.title"
+      :message="modal.message"
+    />
+    <EditUserForm
+      v-if="showEdit"
+      :id="userIdtoEdit"
+      @handle-exit="handleExitEditForm"
+      @update-user="updateExistingUser"
+    />
+    <DeleteUser
+      v-if="showDelete"
+      @handle-delete="deleteUser"
+      @handle-cancel-delete="hideDeleteUser"
     />
   </div>
-  <ToasterMessage
-    v-model:show="modal.show"
-    :class="modal.class"
-    :title="modal.title"
-    :message="modal.message"
-  />
-  <EditUserForm
-    v-if="showEdit"
-    :id="userIdtoEdit"
-    @handle-exit="handleExitEditForm"
-    @update-user="updateExistingUser"
-  />
-  <DeleteUser
-    v-if="showDelete"
-    @handle-delete="deleteUser"
-    @handle-cancel-delete="hideDeleteUser"
-  />
 </template>
 
 <style scoped>
 .container {
   display: flex;
   gap: 50px;
+}
+.logout-button {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin: 20px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: lightsalmon;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 50px;
 }
 </style>

@@ -5,44 +5,44 @@ import EditIcon from "../icons/EditIcon";
 import style from "./UsersList.module.css";
 
 const UsersList: React.FC<UserProptype> = (props) => {
+  const [editColor, setEditColor] = useState<string[]>([]);
+  const [deleteColor, setDeleteColor] = useState<string[]>([]);
 
-  const [editColor,setEditColor] = useState<string[]>([])
-  const [deleteColor,setDeleteColor] = useState<string[]>([])
 
-  const getRole = (role:string) => {
-    return role.split('_')[1];
-  }
+  const getRole = (role: string) => {
+    return role.split("_")[1];
+  };
 
   useEffect(() => {
     if (props.users) {
-      setEditColor(new Array(props.users.length).fill('#000000'))
-      setDeleteColor(new Array(props.users.length).fill('#000000'))
+      setEditColor(new Array(props.users.length).fill("#000000"));
+      setDeleteColor(new Array(props.users.length).fill("#000000"));
     }
-  }, [props.users])
+  }, [props.users]);
 
-  const changeEditColor = (index: number,color: string) => {
-    setEditColor(prev => {
+  const changeEditColor = (index: number, color: string) => {
+    setEditColor((prev) => {
       const newArray = [...prev];
       newArray[index] = color;
       return newArray;
-    })
-  }
+    });
+  };
 
-  const changeDeleteColor = (index: number,color: string) => {
-    setDeleteColor(prev => {
+  const changeDeleteColor = (index: number, color: string) => {
+    setDeleteColor((prev) => {
       const newArray = [...prev];
       newArray[index] = color;
       return newArray;
-    })
-  }
-  
+    });
+  };
+
   const handleClick = () => {
-    if(props.add) {
-      props.handleAdd()
-    }else {
-      props.handleDisableAdd()
-    } 
-  }
+    if (props.add) {
+      props.handleAdd();
+    } else {
+      props.handleDisableAdd();
+    }
+  };
   return (
     <>
       <div className={style["list-container"]}>
@@ -50,8 +50,11 @@ const UsersList: React.FC<UserProptype> = (props) => {
           <h1>No users exists please add one</h1>
         ) : (
           <>
-            <button className={style['add-button']} 
-                    onClick={handleClick}>{props.add ?'+': 'x'}</button>
+            {props.userInfo.isAdmin && (
+              <button className={style["add-button"]} onClick={handleClick}>
+                {props.add ? "+" : "x"}
+              </button>
+            )}
             <h1>User List</h1>
             <table className={style["styled-table"]}>
               <thead>
@@ -62,7 +65,7 @@ const UsersList: React.FC<UserProptype> = (props) => {
                   <th>Email</th>
                   <th>Gender</th>
                   <th>Role</th>
-                  <th>...</th>
+                  {props.userInfo.isAdmin && <th>...</th>}
                 </tr>
               </thead>
               <tbody>
@@ -74,22 +77,34 @@ const UsersList: React.FC<UserProptype> = (props) => {
                     <td>{user.email}</td>
                     <td>{user.gender}</td>
                     <td>{getRole(user.role)}</td>
-                    <td>
-                      <EditIcon className={style.button}
-                                color={editColor[index]}
-                                height="30px" 
-                                width="30px"
-                                onMouseEnter={() => changeEditColor(index,'#FFFFFF')}
-                                onMouseLeave={() => changeEditColor(index,'#000000')}
-                                onClick={() => props.handleEditClick(user.id)} />
-                      <DeleteIcon className={style.button}
-                                  color={deleteColor[index]}  
-                                  height="30px" 
-                                  width="30px"
-                                  onMouseEnter={() => changeDeleteColor(index,'#FFFFFF')}
-                                  onMouseLeave={() => changeDeleteColor(index,'#000000')}
-                                  onClick={() => props.handleDeleteClick(user.id)} />
-                    </td>
+                    {props.userInfo.isAdmin && (
+                      <td>
+                        <EditIcon
+                          className={style.button}
+                          color={editColor[index]}
+                          height="30px"
+                          width="30px"
+                          onMouseEnter={() => changeEditColor(index, "#FFFFFF")}
+                          onMouseLeave={() => changeEditColor(index, "#000000")}
+                          onClick={() => props.handleEditClick(user.id)}
+                        />
+                        { (props.userInfo.userId === parseInt(user.id!)) && (
+                          <DeleteIcon
+                            className={style.button}
+                            color={deleteColor[index]}
+                            height="30px"
+                            width="30px"
+                            onMouseEnter={() =>
+                              changeDeleteColor(index, "#FFFFFF")
+                            }
+                            onMouseLeave={() =>
+                              changeDeleteColor(index, "#000000")
+                            }
+                            onClick={() => props.handleDeleteClick(user.id)}
+                          />
+                        )}
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>

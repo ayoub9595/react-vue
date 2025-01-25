@@ -8,6 +8,12 @@ export interface User {
     role: string;
 };
 
+export interface UserInfo {
+    isAdmin: boolean;
+    userId: number;
+    email: string;
+}
+
 export interface UserProptype {
     users: User[];
     add:boolean;
@@ -15,4 +21,5 @@ export interface UserProptype {
     handleDisableAdd: () => void;
     handleEditClick: (id:string|undefined) => void;
     handleDeleteClick: (id:string|undefined) => void;
+    userInfo: UserInfo;
 };

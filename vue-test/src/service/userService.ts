@@ -1,6 +1,7 @@
 import { refreshToken } from "./authenticationService";
-import type { User } from "@/User";
 import { setAuthTokens, getAccessToken, getRefreshToken } from "../utils/authUtils";
+import { getCurrentUserInfo } from "../utils/tokenUtils";
+import type { User } from "@/User";
 
 const BASE_URL = 'http://localhost:8080/api/users/';
 
@@ -63,16 +64,34 @@ const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
     return response.json();
 };
 
-// Your existing CRUD operations remain the same
-export const getAllUsers = async (): Promise<User[]> => {
-    return fetchWithAuth(BASE_URL);
+export const getUsers = async (): Promise<User[]> => {
+    const { isAdmin, userId } = getCurrentUserInfo();
+    
+    if (isAdmin) {
+        return fetchWithAuth(BASE_URL);
+    } else {
+        const user = await fetchWithAuth(`${BASE_URL}${userId}`);
+        return [user];
+    }
 };
 
 export const getUserById = async (id: number): Promise<User> => {
+    const { isAdmin, userId } = getCurrentUserInfo();
+    
+    // Non-admins can only fetch their own data
+    if (!isAdmin && id !== userId) {
+        throw new Error('Unauthorized access');
+    }
+    
     return fetchWithAuth(`${BASE_URL}${id}`);
 };
 
 export const addUser = async (user: User): Promise<User> => {
+    const { isAdmin } = getCurrentUserInfo();
+    if (!isAdmin) {
+        throw new Error('Unauthorized operation');
+    }
+    
     return fetchWithAuth(BASE_URL, {
         method: 'POST',
         body: JSON.stringify(user)
@@ -80,6 +99,13 @@ export const addUser = async (user: User): Promise<User> => {
 };
 
 export const updateUser = async (user: User): Promise<User> => {
+    const { isAdmin, userId } = getCurrentUserInfo();
+    
+    // Non-admins can only update their own data
+    if (!isAdmin && user.id !== userId.toString()) {
+        throw new Error('Unauthorized operation');
+    }
+    
     return fetchWithAuth(BASE_URL, {
         method: 'PUT',
         body: JSON.stringify(user)
@@ -87,6 +113,11 @@ export const updateUser = async (user: User): Promise<User> => {
 };
 
 export const deleteUserById = async (id: number): Promise<void> => {
+    const { isAdmin } = getCurrentUserInfo();
+    if (!isAdmin) {
+        throw new Error('Unauthorized operation');
+    }
+    
     return fetchWithAuth(`${BASE_URL}${id}`, {
         method: 'DELETE'
     });

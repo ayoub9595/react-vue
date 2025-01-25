@@ -4,6 +4,7 @@ export interface AuthRequest {
 }
 
 export interface AuthResponse {
+    id: string;
     accessToken: string;
     refreshToken: string;
     email: string;

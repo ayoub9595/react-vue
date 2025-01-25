@@ -1,15 +1,15 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useRef, useState, useEffect } from "react";
 import styles from "./Login.module.css";
-import { authenticate, refreshToken } from "../../service/authenticationService";
+import { authenticate } from "../../service/authenticationService";
 import Toaster from "../../components/toaster/Toaster";
-import { useNavigate } from "react-router-dom";
-import { getAccessToken, getRefreshToken, setAuthTokens } from "../../utils/authUtils";
-import LoadingSpinner from "../../components/loadingSpinner/LoadingSpinner";
+import { setAuthTokens } from "../../utils/authUtils";
 
-const Login = () => {
-    const navigate = useNavigate();
+interface LoginProps {
+  onLoginSuccess: () => void;
+}
+
+const Login = ({ onLoginSuccess }: LoginProps) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
     const [modal, setModal] = useState({
         show: false,
         class: "",
@@ -19,52 +19,9 @@ const Login = () => {
 
     const [emailError, setEmailError] = useState<boolean>(false);
     const [passwordError, setPasswordError] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        const checkAuth = async () => {
-            const accessToken = getAccessToken();
-            const refreshTokenStr = getRefreshToken();
-
-            if (!accessToken && !refreshTokenStr) {
-                setIsLoading(false);
-                return;
-            }
-            try {
-                if (accessToken) {
-                    // Verify token validity by making a test request
-                    const response = await fetch('http://localhost:8080/api/users', {
-                        headers: {
-                            'Authorization': `Bearer ${accessToken}`
-                        }
-                    });
-
-                    if (response.ok) {
-                        navigate('/home');
-                        return;
-                    }
-                }
-
-                // If access token is invalid or missing, try refresh token
-                if (refreshTokenStr) {
-                    const response = await refreshToken({ refreshToken: refreshTokenStr });
-                    setAuthTokens(response);
-                    navigate('/home');
-                    return;
-                }
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            } catch (_error) {
-                localStorage.clear();
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        checkAuth();
-    }, [navigate]);
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         try {
@@ -81,7 +38,7 @@ const Login = () => {
             const password = passwordRef.current!.value;
             const response = await authenticate({ email, password });
             setAuthTokens(response);
-            navigate('/home');
+            onLoginSuccess();
         } catch (error) {
             const message = (error instanceof Error && error.message !== 'Unexpected end of JSON input') 
                 ? error.message 
@@ -115,10 +72,6 @@ const Login = () => {
             }, 5000);
         }
     }, [modal]);
-
-    if (isLoading) {
-        return <LoadingSpinner />;
-    }
 
     return (
         <div className={styles.parent}>

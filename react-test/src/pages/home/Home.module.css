@@ -2,3 +2,19 @@
     display: flex;
     gap: 50px;
 }
+
+.logout-button {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin: 20px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: lightsalmon;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 50px;
+}

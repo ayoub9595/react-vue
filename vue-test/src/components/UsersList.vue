@@ -3,6 +3,9 @@ import type { PropsType } from '@/PropsType'
 import { ref, watch } from 'vue';
 import EditIcon from './icons/EditIcon.vue';
 import DelelteIcon from './icons/DelelteIcon.vue';
+import { getCurrentUserInfo, isCurrentUser } from '../utils/tokenUtils';
+
+const {isAdmin} = getCurrentUserInfo();
 
 const editColor = ref<string[]>([]);
 const deleteColor = ref<string[]>([]);
@@ -67,7 +70,7 @@ const handleDelete = (strId: string | undefined) => {
       <h1>No users exists please add one</h1>
     </template>
     <template v-else>
-      <button class="add-button" @click="handleClick">{{props.add ?'+': 'x'}}</button> 
+      <button class="add-button" @click="handleClick" v-if="isAdmin">{{props.add ?'+': 'x'}}</button> 
       <h1>User List</h1>
       <table class="styled-table">
         <thead>
@@ -78,7 +81,7 @@ const handleDelete = (strId: string | undefined) => {
             <th>Email</th>
             <th>Gender</th>
             <th>Role</th>
-            <th>...</th>
+            <th v-if="isAdmin">...</th>
           </tr>
         </thead>
         <tbody>
@@ -89,7 +92,7 @@ const handleDelete = (strId: string | undefined) => {
             <td>{{ user.email }}</td>
             <td>{{ user.gender }}</td>
             <td>{{ getRole(user.role) }}</td>
-            <td>
+            <td v-if="isAdmin">
               <EditIcon className="button"
                         :color="editColor[index]"
                         height="30px" 
@@ -97,7 +100,8 @@ const handleDelete = (strId: string | undefined) => {
                         @mouseenter="() => changeEditColor(index, '#FFFFFF')"
                         @mouseleave="() => changeEditColor(index, '#000000')"
                         @click="()=> handleEdit(user.id)" />
-              <DelelteIcon className="button"
+              <DelelteIcon v-if="!isCurrentUser(user.id!)" 
+                        className="button"
                         :color="deleteColor[index]"
                         height="30px" 
                         width="30px"
